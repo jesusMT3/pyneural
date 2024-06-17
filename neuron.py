@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from dataclasses import dataclass
 
-# TODO: Would be nice to have a custom __str__ and __repr__ methods
-@dataclass
 class Neuron:
     
     def __init__(self, weights: np.array, bias: float, activation_function: str = "sigmoid"):
@@ -20,12 +18,26 @@ class Neuron:
         self._bias = bias
         self._activation_function = activation_function
         
-    # Get methods
+    def __repr__(self):
+        return (f"\n Neuron(). "
+                f"Weights: {self._weights}. "
+                f"Bias: {self._bias} ")
+        
+    def __str__(self):
+        return "Neuron()"
+        
+    # Get and setmethods
     def get_weights(self):
         return self._weights
     
+    def set_weights(self, weights: np.array):
+        self._weights = weights
+    
     def get_bias(self):
         return self._bias
+    
+    def set_bias(self, bias: float):
+        self._bias = bias
     
     def get_activation_function(self):
         return self._activation_function

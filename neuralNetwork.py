@@ -31,52 +31,81 @@ class MyNeuralNetwork:
     
 # Can I generalize this?
 class NeuralNetwork:
-    def __init__(self, config: np.array,  activation_function: str = "sigmoid"):
-        self._n_hidden_layers = len(config[:-1])
-        self._hidden_layers = config[1:-1]
-        self._input_layer = config[0]
-        self._output_layer = config[-1]
-        self._neurons = []
+    def __init__(self, input_layer: int, hidden_layers: list, output_layer: int, activation_function: str = "sigmoid"):
+        self._input_layer = [0] * input_layer
+        self._hidden_layers = []
         
-        for i, num_neurons in enumerate(config):
+        for i, num_neurons in enumerate(hidden_layers):
             if i == 0:
-                continue # TODO: Fix this
-            else:
-                print(f"Layer #{i}: Hidden layer")
-                weights = np.ones(config[i-1])
+                weights = [1] * input_layer
                 bias = 0
-                layer = [Neuron(weights, bias) for _ in range(num_neurons)] 
-                self._neurons.append(layer) 
-        
-    # Get methods
-    
-    def get_hidden_layers(self):
-        return self._hidden_layers
-        
-    def get_n_hidden_layers(self):
-        return self._n_hidden_layers
-    
-    def get_input_layer(self):
-        return self._input_layer
-    
-    def get_output_layer(self):
-        return self._output_layer
-    
-    # TODO: Change this to repr o str method
-    def print_configuration(self): 
-        print(f"""
-Input layer: {self.get_input_layer()}. 
-Hidden layers: {self.get_hidden_layers()}. 
-Output layer: {self.get_output_layer()}
-              """)
-        
-    def get_neurons(self):
-        return self._neurons
-    
-    # Other methods
+                layer = [Neuron(weights, bias, activation_function)] * num_neurons
+            
+            else: 
+                weights = [1] * hidden_layers[i-1]
+                bias = 0
+                layer = [Neuron(weights, bias, activation_function)] * num_neurons
 
+            self._hidden_layers.append(layer)
+        
+        
+        self._output_layer = [Neuron(weights = [1] * hidden_layers[-1],
+                                     bias = 0,
+                                     activation_function = activation_function)
+                            ] * output_layer
+    
+    def __repr__(self):
+        return (f"NeuralNetwork(). \n"
+                f"Input layer: "
+                f"{self._input_layer} \n"
+                f"Hidden layers: "
+                f"{self._hidden_layers} \n"
+                f"Output layers: "
+                f"{self._output_layer}")
+        
+    def __str__(self):
+        return "NeuralNetwork()"
+    
+    def set_params(self, file = None, weight: float = 0, bias: float = 0):
+        if file is None and weight is None and bias is None:
+            raise ValueError("You must introduce one of the values")
+        
+        # No file method, all weights and bias will be the same
+        if file is None: 
+            for layer in self._hidden_layers:
+                for neuron in layer:
+                    neuron.set_weights([weight] * len(neuron.get_weights()))
+                    neuron.set_bias(bias)
+                    
+            for neuron in self._output_layer:
+                neuron.set_weights([weight] * len(neuron.get_weights()))
+                neuron.set_bias(bias)
+            
+        # TODO: Import weights and bias through a file    
+        else: 
+            raise NotImplementedError
+                
+    def feedforward(self, x):
+        if len(x) != len(self._input_layer):
+            raise ValueError("Length of the input does not equal length of input layer")
+        
+        self._input_layer = x
+        
+        results = []
+        for i, layer in enumerate(self._hidden_layers):
+            if i == 0:
+                layer_result = [neuron.feedforward(self._input_layer) for neuron in layer]
+            else: 
+                layer_result = [neuron.feedforward(results[i-1][j]) for j, neuron in enumerate(layer)]
+                
+            results.append(layer_result)
+        
+        return results
+                
+        
 if __name__ == "__main__":
-    config = np.array([2, 3, 3, 3, 1])
-    network = NeuralNetwork(config)
-    network.print_configuration()
-    print(network.get_neurons())
+    
+    input = [2, 2]
+    network = NeuralNetwork(2, [3, 3, 3], 1)
+    print(network.feedforward(input))
+    print(repr(network))
