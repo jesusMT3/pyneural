@@ -1,35 +1,6 @@
-from neuron import Neuron
 import numpy as np
-from dataclasses import dataclass
+from neuron import Neuron
 
-class MyNeuralNetwork:
-    """
-    A neural network with:
-        - 2 inputs
-        - a hidden layer with 2 neurons (h1, h2)
-        - an output layer with 1 neuron (o1)
-  Each neuron has the same weights and bias:
-        - w = [0, 1]
-        - b = 0
-    """
-    def __init__(self):
-        weights = np.array([0, 1])
-        bias = 0
-        
-        # Hidden layer and output layers are neuron objects
-        self.h1 = Neuron(weights, bias)
-        self.h2 = Neuron(weights, bias)
-        self.o1 = Neuron(weights, bias)
-        
-    def feedforward(self, x):
-        out_h1 = self.h1.feedforward(x)
-        out_h2 = self.h2.feedforward(x)
-        
-        out_o1 = self.o1.feedforward(np.array([out_h1, out_h2]))
-        
-        return out_o1
-    
-# Can I generalize this?
 class NeuralNetwork:
     def __init__(self, input_layer: int, hidden_layers: list, output_layer: int, activation_function: str = "sigmoid"):
         self._input_layer = [0] * input_layer
@@ -66,19 +37,22 @@ class NeuralNetwork:
     def __str__(self):
         return "NeuralNetwork()"
     
-    def set_params(self, file = None, weight: float = 0, bias: float = 0):
-        if file is None and weight is None and bias is None:
+    def set_params(self, file = None, weights: list = [], bias: float = 0):
+        if weights is None and bias is None:
             raise ValueError("You must introduce one of the values")
         
         # No file method, all weights and bias will be the same
         if file is None: 
             for layer in self._hidden_layers:
                 for neuron in layer:
-                    neuron.set_weights([weight] * len(neuron.get_weights()))
+                    if len(weights) > 1:
+                        neuron.set_weights(weights)
+                    else:
+                        neuron.set_weights([weights] * len())
                     neuron.set_bias(bias)
                     
             for neuron in self._output_layer:
-                neuron.set_weights([weight] * len(neuron.get_weights()))
+                neuron.set_weights(weights)
                 neuron.set_bias(bias)
             
         # TODO: Import weights and bias through a file    
@@ -100,12 +74,16 @@ class NeuralNetwork:
                 
             results.append(layer_result)
         
-        return results
-                
+        self._results = results
+        
+        for neuron in self._output_layer:
+            result = [neuron.feedforward(results[-1])]
+
+        return result[0] if len(result) == 1 else result
         
 if __name__ == "__main__":
     
-    input = [2, 2]
     network = NeuralNetwork(2, [3, 3, 3], 1)
+    input = [2, 3]
+    network.set_params(weights = [1, 1, 1], bias = 0)
     print(network.feedforward(input))
-    print(repr(network))

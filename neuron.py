@@ -1,4 +1,4 @@
-import activationFunctions as af
+import activation_functions as af
 import numpy as np
 import matplotlib.pyplot as plt
 from dataclasses import dataclass

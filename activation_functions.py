@@ -2,6 +2,10 @@ import numpy as np
 from scipy.special import erf
 from math import sqrt
 
+"""
+Docstring
+"""
+
 def identity(x: float) -> float:
     """Identity activation function: \\
     f(x) = x
