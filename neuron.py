@@ -30,7 +30,7 @@ class Neuron:
     def get_weights(self):
         return self._weights
     
-    def set_weights(self, weights: np.array):
+    def set_weights(self, weights: list):
         self._weights = weights
     
     def get_bias(self):
