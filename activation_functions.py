@@ -1,7 +1,5 @@
-import numpy as np
-from scipy.special import erf
-from math import sqrt
-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 In this module it is developed all of the most common
 activation functions used for creating neurons on
@@ -9,74 +7,86 @@ neural networks. The source is from wikipedia:
 https://en.wikipedia.org/wiki/Activation_function
 """
 
-def identity(x: float) -> float:
+import numpy as np
+from scipy.special import erf
+from math import sqrt
+
+def identity(input_value: float) -> float:
     """
     Identity activation function: \\
     f(x) = x
     """
-    return x
+    return input_value
 
-def binaryStep(x: float) -> float:
+def binary_step(input_value: float) -> float:
     """
     Binary step activation function: \\
     f(x) = 0 if x < 0 \\
     f(x) = 1 if x >= 0 
     """
-    return 0 if x < 0 else 1
+    return 0 if input_value < 0 else 1
 
-    
-def sigmoid(x: float) -> float:
+
+def sigmoid(input_value: float) -> float:
     """
     Sigmoid activation function: \\
     f(x) = 1/(1 + e^(-x))
     """
-    return 1/((1 + np.exp(-x)))
+    return 1/((1 + np.exp(-input_value)))
 
-def tanh(x: float) -> float:
+def tanh(input_value: float) -> float:
     """
     Hyperbolic tangent activation function: \\
     f(x) = (e^x - e^-x)/(e^x + e^-x)
     """
-    return (np.exp(x) - np.exp(-x))/(np.exp(x) + np.exp(-x))
+    num = np.exp(input_value) - np.exp(-input_value)
+    den = np.exp(input_value) + np.exp(-input_value)
+    return num / den
 
-def smht(x: float, a: float, b: float, c: float, d: float) -> float:
+def smht(input_value: float,
+        param_a: float,
+        param_b: float,
+        param_c: float,
+        param_d: float) -> float:
     """
     Soboleva modified hyperbolic tangent activation function: \\
     f(x) = (e^ax - e^-bx)/(e^cx + e^-dx)
     """
-    return (np.exp(a * x) - np.exp(b * (-x)))/(np.exp(c * x) + np.exp(d * (-x)))
+    num = np.exp(param_a * input_value) - np.exp(param_b * (-input_value))
+    den = np.exp(param_c * input_value) + np.exp(param_d * (-input_value))
+    return num / den
 
-def reLu(x: float) -> float:
+def relu(input_value: float) -> float:
     """
     Recified linear unit activation function: \\
     f(x) = 0 if x < 0 \\
     f(x) = x if x >= 0 
     """
-    return 0 if x < 0 else x
+    return 0 if input_value < 0 else input_value
 
-def geLu(x: float) -> float:
+def gelu(input_value: float) -> float:
     """
     Gaussian error linear unit activation function: \\
     f(x) = 0.5x * (1 + erf(x/sqrt(2)))
     """
-    return 0.5 * x * (1 + erf(x/sqrt(2)))
+    return 0.5 * input_value * (1 + erf(input_value/sqrt(2)))
 
-def softPlus(x: float) -> float:
+def soft_plus(input_value: float) -> float:
     """
     Softplus activation function: \\
     f(x) = ln(1+e^x)
     """
-    return np.log(1+np.exp(x))
+    return np.log(1 + np.exp(input_value))
 
-def eLu(x: float, alpha: float) -> float:
+def elu(input_value: float, alpha: float) -> float:
     """
     Exponential linear unit activation function: \\
     f(x) = alpha(e^x - 1) if x < 0
     f(x) = x if x > 0
     """
-    return alpha * (np.exp(x) - 1) if x < 0 else x
+    return alpha * (np.exp(input_value) - 1) if input_value < 0 else input_value
 
-def seLu(x: float):
+def selu(input_value: float):
     """
     Scaled exponential linear unit activation function \\
     f(x) = lambda * alpha(e^x - 1) if x < 0
@@ -85,50 +95,53 @@ def seLu(x: float):
     lambda = 1.0507
     alpha = 1.67326
     """
-    return 1.67326 * 1.0507 * (np.exp(x) - 1) if x < 0 else 1.0507 * x
+    return 1.67326 * 1.0507 * (np.exp(x) - 1) if input_value < 0 else 1.0507 * input_value
 
-def leakyReLu(x: float):
+def leaky_relu(input_value: float):
     """
     Leaky rectified linear unit activation function \\
     f(x) = x if > 0
     f(x) = 0.01x if x <= 0
     """
-    return x if x > 0 else 0.01 * x
+    return input_value if input_value > 0 else 0.01 * input_value
 
-def preLu(x: float, alpha: float):
+def pre_lu(input_value: float, alpha: float):
     """
     Parametric rectified linear unit activation function \\
     f(x) = alpha * x if x < 0
     f(x) = x if x >= 0
     """
-    return alpha * x if x < 0 else x
+    return alpha * input_value if input_value < 0 else input_value
 
-def siLu(x: float):
+def silu(input_value: float):
     """
     Sigmoid linear unit activation function
     f(x) = x / (1 + e^(-x))
     """
-    return x / (1 + np.exp(-x))
+    return input_value / (1 + np.exp(-input_value))
 
-def gaussian(x: float):
+def gaussian(input_value: float):
     """
     Gaussian activation function
     f(x) = e^(-x^2)
     """
-    return np.exp(-x ** 2)
+    return np.exp(-input_value ** 2)
 
 # Vectorial activation functions
-def softmax(x: np.array):
-    output = []
-    for i in x:
+def softmax(input_array: np.array):
+    """
+    Softmax activation function
+    """
+    output_array = []
+    for i in input_array:
         num = np.exp(i)
         den = 0
         for j in x:
             den += np.exp(j)
-        
-        output.append(num/den)
-    
-    return output
+
+        output_array.append(num/den)
+
+    return output_array
 
 if __name__ == "__main__":
     # activation functions test
@@ -137,7 +150,7 @@ if __name__ == "__main__":
     y = [gaussian(i) for i in x]
     plt.plot(x, y)
     plt.show()
-    
+
     # softmax function test
     import random
     x = np.random.rand(10) * 10
