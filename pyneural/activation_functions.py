@@ -5,6 +5,25 @@ In this module it is developed all of the most common
 activation functions used for creating neurons on
 neural networks. The source is from wikipedia:
 https://en.wikipedia.org/wiki/Activation_function
+
+Here is the complete list of the implemented activation functions and their representations:
+    - Identity: "identity"
+    - Binary step: "binary_step"
+    - Sigmoid: "sigmoid"
+    - Hyperbolic tangent: "tanh"
+    - Soboleva modified hyperbolic tangent: "smht"
+    - Recified linear unit: "relu"
+    - Gaussian error linear unit: "gelu"
+    - Soft-plus: "soft_plus"
+    - Exponential linear unit: "elu"
+    - Scaled exponential linear unit: "selu"
+    - Leaky rectified linear unit: "leaky_relu"
+    - Parametric rectified linear unit: "prelu"
+    - Sigmoid linear unit: "silu"
+    - Gaussian: "gaussian"
+    
+Some vectorial activation functions are implemented as well:
+    - Soft Max: "softmax"
 """
 
 import numpy as np
@@ -105,7 +124,7 @@ def leaky_relu(input_value: float):
     """
     return input_value if input_value > 0 else 0.01 * input_value
 
-def pre_lu(input_value: float, alpha: float):
+def prelu(input_value: float, alpha: float):
     """
     Parametric rectified linear unit activation function \\
     f(x) = alpha * x if x < 0
@@ -141,7 +160,7 @@ def softmax(input_array: np.array):
 
         output_array.append(num/den)
 
-    return output_array
+    return output_array 
 
 if __name__ == "__main__":
     # activation functions test
