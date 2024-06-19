@@ -34,7 +34,11 @@ class Neuron:
         - Bias: get_bias(), set_bias(float)
         - Activation function: get_activation_function(), set_activation_function(str)
     """
-    def __init__(self, weights: np.array, bias: float, activation_function: str = "sigmoid"):
+    # dunder methods
+    def __init__(self, 
+                weights: np.array, 
+                bias: float, 
+                activation_function: str = "sigmoid") -> None:
         """
         Neuron class
 
@@ -47,42 +51,116 @@ class Neuron:
         self._bias = bias
         self._activation_function = activation_function
 
-    def __repr__(self):
-        return (f"\n Neuron(). "
+    def __str__(self) -> str:
+        """
+        Method that returns the "short" representation of the neurn class. 
+        
+        Returns:
+            str: "Neuron()"
+        """
+        return (f"Neuron()")
+    
+    def __repr__(self) -> str:
+        """
+        Method that returns the "long" representation of the neuron class. 
+        The format is:
+            - "self._str"
+            - "weights: "
+            - "bias: "
+            - "Activation function: "
+
+        Returns:
+            formatted string: Containing all of the information
+        """
+        return (f"{str(self)}. "
                 f"Weights: {self.get_weights()}. "
                 f"Bias: {self.get_bias()} "
                 f"Activation function: {self.get_activation_function()}")
 
-    def __str__(self):
-        return "Neuron()"
+    # get and set methods
+    def get_weights(self) -> np.array:
+        """
+        Method which returns the "weights" attribute.
 
-    # Get and setmethods
-    def get_weights(self):
+        Returns:
+            self._weights (np.array): Numpy array containing all of the neuron's weights.
+        """
         return self._weights
 
-    def set_weights(self, weights: list):
+    def set_weights(self, weights: np.array) -> None:
+        """
+        Method that sets the "weights" attribute.
+
+        Args:
+            weights (np.array): Numpy array containing the new values of the weights.
+        """
         self._weights = weights
 
-    def get_bias(self):
+    def get_bias(self) -> float:
+        """
+        Method which returns the "bias" attribute.
+
+        Returns:
+            self._bias (float): Bias value of the neuron.
+        """
         return self._bias
 
-    def set_bias(self, bias: float):
+    def set_bias(self, bias: float) -> None:
+        """
+        Method that sets the bias attribute.
+
+        Args:
+            bias (float): The new value of the bias.
+        """
         self._bias = bias
 
-    def get_activation_function(self):
+    def get_activation_function(self) -> str:
+        """
+        Method which returns the string representation of 
+        the activation function
+
+        Returns:
+            self._activation_function (str): The string representation 
+            of the activation function
+        """
         return self._activation_function
-    
-    def set_activation_function(self, activation_function: str):
+  
+    def set_activation_function(self, activation_function: str) -> None:
+        """
+        Method that sets the string representation of the activation function.
+        Some of the examples are shown below:
+        - Sigmoid function: "sigmoid".
+        - Rectified linear unit function: "relu".
+        - Gaussian function: "gaussian".
+
+        Args:
+            activation_function (str): _description_
+        """
         self._activation_function = activation_function
 
-    def feedforward(self, inputs):
+    # Other methods  
+    def feedforward(self, inputs: np.array) -> float:
+        """
+        The feedforward method is the result of the dot product between the 
+        wieghts and the input values, plus the bias value, all wrapped in
+        the activation function.
+
+        Args:
+            inputs (np.array): Numpy array containing the inputs to the neuron.
+
+        Returns:
+            result (float): The result of the feedforward formula
+        """
         total = np.dot(self._weights, inputs) + self._bias
         activation_function = getattr(af, self._activation_function)
         return activation_function(total)
 
     # Other methods
-    def draw_activation_function(self):
-        """Plots the activation function"""
+    def draw_activation_function(self) -> None:
+        """
+        Gets the string representing the activation functions and
+        creates a matplotlib.pyplot plot to display it.
+        """
 
         x = [round(i * 0.1, 1) for i in range(-100, 101)]
         activation_function = getattr(af, self._activation_function)
@@ -92,6 +170,7 @@ class Neuron:
         plt.plot(x, y)
         plt.show()        
 
+# Test
 if __name__ == "__main__":
     weights = np.array([0, 1]) # w1 = 0, w2 = 1
     bias = 4                   # b = 4
