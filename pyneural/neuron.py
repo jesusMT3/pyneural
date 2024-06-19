@@ -49,8 +49,9 @@ class Neuron:
 
     def __repr__(self):
         return (f"\n Neuron(). "
-                f"Weights: {self._weights}. "
-                f"Bias: {self._bias} ")
+                f"Weights: {self.get_weights()}. "
+                f"Bias: {self.get_bias()} "
+                f"Activation function: {self.get_activation_function()}")
 
     def __str__(self):
         return "Neuron()"
