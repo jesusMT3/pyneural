@@ -26,7 +26,13 @@ class Layer():
                                             bias = 0,
                                             activation_function = activation_function)] 
                                     * n_neurons, dtype = Neuron)
-        print(self._neurons)
+
+    def __str__(self):
+        return f"Layer() with {self._n_neurons} neurons"
+    
+    def __repr__(self):
+        return (f"{str(self)}\n"
+                f"{self._neurons}")
 
     # Add one neuron of same type or one particular neuron
     def add_neuron(self, neuron: Neuron = None, random: bool = False):
@@ -50,9 +56,12 @@ class Layer():
 
         return output
 
-class Neural_Network():
-    def __init(self):
-        ...
+if __name__ == "__main__":
 
-layer = Layer(n_neurons = 3, n_inputs_per_neuron = 3, random = False)
-print(layer.feedforward([1] * 3))
+    layer = Layer(n_neurons = 4, n_inputs_per_neuron = 3, random = True)
+
+    print(repr(layer))
+
+    neuron = Neuron(weights = np.zeros(layer._n_weights), bias = 1, activation_function="relu")
+    layer.add_neuron(neuron)
+    print(repr(layer))
