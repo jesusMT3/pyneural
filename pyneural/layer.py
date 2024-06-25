@@ -3,7 +3,7 @@ import numpy as np
 
 class Layer():
     def __init__(self,n_neurons, n_inputs_per_neuron, 
-                 activation_function = "sigmoid", random: bool = False):
+                 activation_function = "sigmoid", random: bool = False) -> None:
         
         self._n_weights = n_inputs_per_neuron
         self._n_neurons = n_neurons
@@ -27,15 +27,15 @@ class Layer():
                                             activation_function = activation_function)] 
                                     * n_neurons, dtype = Neuron)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Layer() with {self._n_neurons} neurons"
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f"{str(self)}\n"
                 f"{self._neurons}")
 
     # Add one neuron of same type or one particular neuron
-    def add_neuron(self, neuron: Neuron = None, random: bool = False):
+    def add_neuron(self, neuron: Neuron = None) -> None:
         if neuron is None:
             self._neurons = np.append(self._neurons, 
                                   Neuron(weights = np.ones(self._n_weights),
@@ -44,8 +44,9 @@ class Layer():
         
         else: 
             self._neurons = np.append(self._neurons, neuron)
+
     def add_neurons(self, neurons_to_append: int):
-        ...
+        raise NotImplementedError
         
     def feedforward(self, inputs: np.array):
         output = np.zeros(len(self._neurons))
